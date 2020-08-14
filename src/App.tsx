@@ -1,17 +1,10 @@
-import { observable } from "mobx";
 import React, { useState } from "react";
-import { observer } from "mobx-react";
 
 import { ActiveTasks } from "./components/ActiveTasks/ActiveTasks";
 import { TasksList } from "./components/TasksList/TasksList";
-import { Modal, CreateModalState } from "./components/Modal";
+import { Modal } from "./components/Modal";
 
-export class AppState {
-  @observable
-  createModalState = new CreateModalState();
-}
-
-const App: React.FC<{ state: AppState }> = observer(({ state }) => {
+const App: React.FC = () => {
   const [kindOfModal, setKindOfModal] = useState<string>("");
 
   function showCreateTaskModal() {
@@ -32,9 +25,7 @@ const App: React.FC<{ state: AppState }> = observer(({ state }) => {
   return (
     <>
       <div className="py-4 px-6 mb-4 border-b border-gray-500 flex justify-between w-full">
-        <h1>
-          Hi --- {state.createModalState.createTaskState.inputValue.value}
-        </h1>
+        <h1>Hi</h1>
 
         <div className="flex">
           <button
@@ -64,15 +55,9 @@ const App: React.FC<{ state: AppState }> = observer(({ state }) => {
 
       <TasksList />
 
-      {kindOfModal && (
-        <Modal
-          modalType={kindOfModal}
-          onClose={closeHandler}
-          createState={state.createModalState}
-        />
-      )}
+      {kindOfModal && <Modal modalType={kindOfModal} onClose={closeHandler} />}
     </>
   );
-});
+};
 
 export default App;

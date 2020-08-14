@@ -2,14 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./tailwind.generated.css";
 import "./styles/main.scss";
-import App, { AppState } from "./App";
+import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
-const appState = new AppState();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App state={appState} />
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
