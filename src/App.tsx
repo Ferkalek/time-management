@@ -1,26 +1,78 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { observable } from "mobx";
+import React, { useState } from "react";
+import { observer } from "mobx-react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { ActiveTasks } from "./components/ActiveTasks/ActiveTasks";
+import { TasksList } from "./components/TasksList/TasksList";
+import { Modal, CreateModalState } from "./components/Modal";
+
+export class AppState {
+  @observable
+  createModalState = new CreateModalState();
 }
+
+const App: React.FC<{ state: AppState }> = observer(({ state }) => {
+  const [kindOfModal, setKindOfModal] = useState<string>("");
+
+  function showCreateTaskModal() {
+    setKindOfModal("create");
+  }
+
+  function showEditTaskModal() {
+    setKindOfModal("edit");
+  }
+
+  function showReportModal() {
+    setKindOfModal("report");
+  }
+
+  function closeHandler() {
+    setKindOfModal("");
+  }
+  return (
+    <>
+      <div className="py-4 px-6 mb-4 border-b border-gray-500 flex justify-between w-full">
+        <h1>
+          Hi --- {state.createModalState.createTaskState.inputValue.value}
+        </h1>
+
+        <div className="flex">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
+            onClick={showCreateTaskModal}
+          >
+            Create a task
+          </button>
+
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
+            onClick={showEditTaskModal}
+          >
+            Edit a task
+          </button>
+
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
+            onClick={showReportModal}
+          >
+            Report
+          </button>
+        </div>
+      </div>
+
+      <ActiveTasks />
+
+      <TasksList />
+
+      {kindOfModal && (
+        <Modal
+          modalType={kindOfModal}
+          onClose={closeHandler}
+          createState={state.createModalState}
+        />
+      )}
+    </>
+  );
+});
 
 export default App;
