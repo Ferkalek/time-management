@@ -1,63 +1,61 @@
-import React, { useState } from "react";
+import React from "react";
+import { observer } from "mobx-react";
+import { ToastContainer } from "react-toastify";
 
 import { ActiveTasks } from "./components/ActiveTasks/ActiveTasks";
 import { TasksList } from "./components/TasksList/TasksList";
 import { Modal } from "./components/Modal";
 
-const App: React.FC = () => {
-  const [kindOfModal, setKindOfModal] = useState<string>("");
+import Context, { useApplicationService } from "./context";
 
-  function showCreateTaskModal() {
-    setKindOfModal("create");
-  }
+const App: React.FC = observer(() => {
+  const state = useApplicationService();
 
-  function showEditTaskModal() {
-    setKindOfModal("edit");
-  }
-
-  function showReportModal() {
-    setKindOfModal("report");
-  }
-
-  function closeHandler() {
-    setKindOfModal("");
-  }
   return (
-    <>
-      <div className="py-4 px-6 mb-4 border-b border-gray-500 flex justify-between w-full">
-        <h1>Hi</h1>
+    <Context.Provider value={state}>
+      <div className="pt-20">
+        <div className="fixed top-0 left-0 right-0 z-10 bg-white flex-wrap py-4 px-6 border-b border-gray-300 shadow-sm flex justify-between items-center w-full">
+          <h1 className="font-bold text-gray-800 text-md uppercase">
+            Tasks management
+          </h1>
 
-        <div className="flex">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
-            onClick={showCreateTaskModal}
-          >
-            Create a task
-          </button>
-
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
-            onClick={showEditTaskModal}
-          >
-            Edit a task
-          </button>
-
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
-            onClick={showReportModal}
-          >
-            Report
-          </button>
+          <div className="flex items-center">
+            <button
+              className="bg-transparent hover:bg-blue-500 text-blue-700 px-2 py-1 uppercase text-xs font-bold ml-2 hover:text-white border border-blue-500 hover:border-transparent rounded"
+              onClick={state.showCreateTaskModal}
+            >
+              Create a task
+            </button>
+            <button
+              className="bg-transparent hover:bg-blue-500 text-blue-700 px-2 py-1 uppercase text-xs font-bold ml-2 hover:text-white border border-blue-500 hover:border-transparent rounded"
+              onClick={state.showReportModal}
+            >
+              Report
+            </button>
+          </div>
         </div>
+
+        <div className="mx-auto max-w-sm md:max-w-lg py-4 px-6">
+          <ActiveTasks />
+          <TasksList />
+        </div>
+
+        {state.kindOfModal && <Modal />}
+
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
-
-      <ActiveTasks />
-
-      <TasksList />
-
-      {kindOfModal && <Modal modalType={kindOfModal} onClose={closeHandler} />}
-    </>
+    </Context.Provider>
   );
-};
+});
 
 export default App;

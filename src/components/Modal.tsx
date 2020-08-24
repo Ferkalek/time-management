@@ -1,27 +1,46 @@
-import React from "react";
+import React, { useContext, useCallback } from "react";
+import { observer } from "mobx-react";
 import { CreateTask } from "./CreateTask";
 import { EditTask } from "./EditTask";
 import { Report } from "./Report";
+import Context from "../context";
+import { Confirmation } from "./Confirmation";
 
-interface ModalType {
-  modalType: string;
-  onClose: () => void;
-}
-
-export const Modal: React.FC<ModalType> = ({ modalType, onClose }) => {
+export const Modal: React.FC = observer(() => {
+  const state = useContext(Context);
   const titleOfModal =
-    modalType === "create"
+    state.kindOfModal === "create"
       ? "Create a task"
-      : modalType === "edit"
+      : state.kindOfModal === "edit"
       ? "Edit a task"
-      : "Report";
-  return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
-      <div className="py-4 px-6 rounded shadow-xs max-w-sm w-full">
-        <div className="flex justify-between">
-          <h2>{titleOfModal}</h2>
+      : state.kindOfModal === "report"
+      ? "Report"
+      : "Confirmation";
 
-          <button onClick={() => onClose()}>
+  const clickHandler = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) {
+        state.closeHandler();
+      }
+    },
+    [state]
+  );
+
+  return (
+    <div
+      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center bg-black bg-opacity-75"
+      onClick={clickHandler}
+    >
+      <div className="bg-white max-w-sm p-6 rounded shadow-xl w-full relative z-10">
+        <div className="flex justify-between mb-2">
+          <h2 className="uppercase text-gray-700 font-bold text-md">
+            {titleOfModal}
+          </h2>
+
+          <button
+            className="cursor-pointer text-gray-700 hover:text-gray-900 transition ease-in-out duration-300"
+            onClick={state.closeHandler}
+          >
             <svg viewBox="0 0 20 20" fill="currentColor" className="x w-6 h-6">
               <path
                 fillRule="evenodd"
@@ -33,11 +52,12 @@ export const Modal: React.FC<ModalType> = ({ modalType, onClose }) => {
         </div>
 
         <div className="py-2">
-          {modalType === "create" && <CreateTask />}
-          {modalType === "edit" && <EditTask />}
-          {modalType === "report" && <Report />}
+          {state.kindOfModal === "create" && <CreateTask />}
+          {state.kindOfModal === "edit" && <EditTask />}
+          {state.kindOfModal === "report" && <Report />}
+          {state.kindOfModal === "confirmation" && <Confirmation />}
         </div>
       </div>
     </div>
   );
-};
+});
