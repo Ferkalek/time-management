@@ -13,7 +13,7 @@ const App: React.FC = observer(() => {
 
   return (
     <Context.Provider value={state}>
-      <div className="pt-24 sm:pt-20">
+      <div className="main-wrapper">
         <div className="header fixed top-0 left-0 right-0 z-10 bg-white flex-wrap py-4 px-6 border-b border-gray-300 shadow-sm flex justify-between items-center w-full">
           <h1 className="font-bold text-gray-800 text-md uppercase">
             Tasks management
@@ -35,10 +35,7 @@ const App: React.FC = observer(() => {
           </div>
         </div>
 
-        <div
-          className="mx-auto max-w-sm md:max-w-lg py-4 px-6"
-          style={{ minHeight: "calc(100vh - 8rem)" }}
-        >
+        <div className="list-wrapper mx-auto max-w-sm md:max-w-lg py-4 px-6">
           <ActiveTasks />
           <TasksList />
         </div>
