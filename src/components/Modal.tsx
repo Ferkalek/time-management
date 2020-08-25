@@ -28,7 +28,7 @@ export const Modal: React.FC = observer(() => {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center bg-black bg-opacity-75"
+      className="fixed top-0 left-0 right-0 bottom-0 z-50 p-6 flex justify-center items-center bg-black bg-opacity-75"
       onClick={clickHandler}
     >
       <div className="bg-white max-w-sm p-6 rounded shadow-xl w-full relative z-10">

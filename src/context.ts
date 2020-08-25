@@ -41,17 +41,26 @@ export const useApplicationService = () => {
       state.appendTask(task);
       state.closeHandler();
     },
+    replaceRunningTask: (task: ITask): void => {
+      task.isRunning = false;
+      task.isStopped = true;
+      task.duration =
+        task.duration > 0
+          ? +new Date() - task.timeStart + task.duration
+          : +new Date() - task.timeStart;
+      task.timeStart = 0;
+    },
     createTaskAndActivate(task: ITask): void {
-      if (state.tasks.find((task) => task.isRunning === true)) {
-        task.isRunning = false;
-        task.isStopped = true;
-
+      const runningTask = state.tasks.find((task) => task.isRunning === true);
+      if (runningTask) {
         toast.info(
-          "You have a task that is running yet, so this task added to active task but as stopped!"
+          "You have a task that is running yet, so a new task will replace the task is running!"
         );
+
+        state.replaceRunningTask(runningTask);
       }
 
-      state.prependTask(task);
+      state.appendTask(task);
       state.closeHandler();
     },
     updateTask(task: ITask): void {
@@ -63,13 +72,10 @@ export const useApplicationService = () => {
       const runningTask = state.tasks.find((task) => task.isRunning === true);
       if (runningTask) {
         toast.info(
-          "You have a task that is running yet. It will stoped and running a task that you choosed?"
+          "You have a task that is running yet, so a new task will replace the task is running!"
         );
 
-        runningTask.isRunning = false;
-        runningTask.isStopped = true;
-        runningTask.duration = +new Date() - runningTask.timeStart;
-        runningTask.timeStart = 0;
+        state.replaceRunningTask(runningTask);
       }
 
       const task = state.tasks.find((t) => t.id === id);
