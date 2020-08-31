@@ -15,7 +15,7 @@ export const ActiveTasks: React.FC = observer(() => {
 
       {!state.isRunningTask && !state.arePausedTasks.length && (
         <p className="text-gray-500 text-sm -mt-4">
-          You do not have any active task.
+          You do not have any active task!
         </p>
       )}
 
